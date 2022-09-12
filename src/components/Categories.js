@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AiFillEdit } from 'react-icons/ai';
 
 const Categories = () => {
     const navigate = useNavigate();
@@ -19,25 +20,35 @@ const Categories = () => {
         getCategories();
     }, []);
 
+    const openCategory = (id) => {
+        navigateTo('/category/' + id);
+    }
+
     return (
         <>
             <table className='table'>
                 <thead>
                     <tr>
-                        <th colSpan={3}>Categories</th>
+                        <th colSpan={4}>Categories</th>
                     </tr>
                     <tr>
                         <th scope='col'>ID</th>
                         <th scope='col'>Name</th>
                         <th scope='col'>Description</th>
+                        <th scope='col'></th>
                     </tr>
                 </thead>
                 <tbody>
                     {categories.map((category) => (
-                        <tr key={category.id}>
+                        <tr key={category.id} >
                             <th scope='row'>{category.id}</th>
                             <td>{category.name}</td>
                             <td>{category.description}</td>
+                            <td>
+                                <button className='btn'>
+                                    <AiFillEdit onClick={() => openCategory(category.id)} />
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

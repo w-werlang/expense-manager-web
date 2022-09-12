@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa';
 
 const Category = () => {
     const navigate = useNavigate();
@@ -7,9 +8,13 @@ const Category = () => {
         navigate(path);
     }
 
-    const pathID = useParams().id;
+    const pathId = useParams().id;
+    const isAdding = pathId === undefined;
+
+
+    const [showError, setShowError] = useState(false);
     const [category, setCategory] = useState({
-        id: pathID === undefined ? 0 : pathID,
+        id: isAdding ? 0 : pathId,
         name: '',
         description: ''
     });
@@ -21,21 +26,40 @@ const Category = () => {
     };
 
     const postCategory = async () => {
-        await fetch('http://localhost:8080/category', {
+        var res = await fetch('http://localhost:8080/category', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(category),
         });
 
-        navigateTo('/categories/');
+        if (res.ok) {
+            navigateTo('/categories');
+        } else {
+            setShowError(true);
+        }
+        console.log(res);
     };
 
-    const save = () => {
+    const deleteCategory = async () => {
+        await fetch('http://localhost:8080/category', {
+            method: 'DELETE',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify(category),
+        });
+
+        navigateTo('/categories/');
+    }
+
+    const onSave = () => {
         postCategory();
     }
 
+    const onDelete = () => {
+        deleteCategory();
+    }
+
     useEffect(() => {
-        if (category.id != 0) {
+        if (!isAdding) {
             getCategory();
         }
     }, []);
@@ -45,7 +69,7 @@ const Category = () => {
             <div className='mb-3 row'>
                 <label htmlFor='input-id' className='col-sm-2 col-form-label'>ID</label>
                 <div className='col-sm-10'>
-                    <input type='text' readOnly className='form-control-plaintext' id='input-id' value={category.id} />
+                    <input type='text' readOnly className='form-control-plaintext' id='input-id' value={isAdding ? '' : category.id} />
                 </div>
             </div>
             <div className='mb-3 row'>
@@ -63,10 +87,25 @@ const Category = () => {
             <div className='mb-3 row'>
                 <div className='col-sm-2' />
                 <div className='btn-group col-sm-10' role='group'>
-                    <button onClick={() => save()} className='btn btn-secondary btn-success'>Save</button>
-                    <button onClick={() => navigateTo('/categories')} className='btn btn-secondary btn-warning'>Cancel</button>
+                    {isAdding ?
+                        <button onClick={() => onSave()} className='btn btn-secondary btn-success'>Add</button> :
+                        <>
+                            <button onClick={() => onSave()} className='btn btn-secondary btn-success'>Save</button>
+                            <button onClick={() => onDelete()} className='btn btn-secondary btn-danger'>Delete</button>
+                        </>
+                    }
+                    <button onClick={() => navigateTo('/categories')} className='btn btn-secondary'>Cancel</button>
                 </div>
             </div>
+
+            {showError ?
+                <div className="alert alert-danger" role="alert">
+                    Something went wrong.
+                    <div style={{ float: 'right' }}>
+                        <FaTimes className='close' onClick={() => { setShowError(false) }} />
+                    </div>
+                </div> : <></>
+            }
         </div >
     )
 }
