@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiFillEdit } from 'react-icons/ai';
 
-const Categories = () => {
+const CategoryList = () => {
     const navigate = useNavigate();
     const navigateTo = (path) => {
         navigate(path);
@@ -58,4 +58,4 @@ const Categories = () => {
     )
 }
 
-export default Categories
+export default CategoryList
