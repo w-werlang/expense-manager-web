@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
 
-const Category = () => {
+const Event = () => {
     const navigate = useNavigate();
     const navigateTo = (path) => {
         navigate(path);
@@ -13,53 +13,53 @@ const Category = () => {
 
 
     const [showError, setShowError] = useState(false);
-    const [category, setCategory] = useState({
+    const [event, setEvent] = useState({
         id: isAdding ? 0 : pathId,
         name: '',
         description: ''
     });
 
-    const getCategory = async () => {
-        const res = await fetch(`http://localhost:8080/category/${category.id}`);
+    const getEvent = async () => {
+        const res = await fetch(`http://localhost:8080/event/${event.id}`);
         const data = await res.json();
-        setCategory(data);
+        setEvent(data);
     };
 
-    const postCategory = async () => {
-        var res = await fetch('http://localhost:8080/category', {
+    const postEvent = async () => {
+        var res = await fetch('http://localhost:8080/event', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify(category),
+            body: JSON.stringify(event),
         });
 
         if (res.ok) {
-            navigateTo('/categories');
+            navigateTo('/events');
         } else {
             setShowError(true);
         }
     };
 
-    const deleteCategory = async () => {
-        await fetch('http://localhost:8080/category', {
+    const deleteEvent = async () => {
+        await fetch('http://localhost:8080/event', {
             method: 'DELETE',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify(category),
+            body: JSON.stringify(event),
         });
 
-        navigateTo('/categories/');
+        navigateTo('/events/');
     }
 
     const onSave = () => {
-        postCategory();
+        postEvent();
     }
 
     const onDelete = () => {
-        deleteCategory();
+        deleteEvent();
     }
 
     useEffect(() => {
         if (!isAdding) {
-            getCategory();
+            getEvent();
         }
     }, []);
 
@@ -68,19 +68,19 @@ const Category = () => {
             <div className='mb-3 row'>
                 <label htmlFor='input-id' className='col-sm-2 col-form-label'>ID</label>
                 <div className='col-sm-10'>
-                    <input type='text' readOnly className='form-control-plaintext' id='input-id' value={isAdding ? '' : category.id} />
+                    <input type='text' readOnly className='form-control-plaintext' id='input-id' value={isAdding ? '' : event.id} />
                 </div>
             </div>
             <div className='mb-3 row'>
                 <label htmlFor='input-name' className='col-sm-2 col-form-label'>Name</label>
                 <div className='col-sm-10'>
-                    <input type='text' className='form-control' id='input-name' value={category.name} onChange={(_event) => setCategory({ ...category, name: _event.target.value })} />
+                    <input type='text' className='form-control' id='input-name' value={event.name} onChange={(_event) => setEvent({ ...event, name: _event.target.value })} />
                 </div>
             </div>
             <div className='mb-3 row'>
                 <label htmlFor='input-desc' className='col-sm-2 col-form-label'>Description</label>
                 <div className='col-sm-10'>
-                    <input type='text' className='form-control' id='input-desc' value={category.description} onChange={(_event) => setCategory({ ...category, description: _event.target.value })} />
+                    <input type='text' className='form-control' id='input-desc' value={event.description} onChange={(_event) => setEvent({ ...event, description: _event.target.value })} />
                 </div>
             </div>
             <div className='mb-3 row'>
@@ -93,7 +93,7 @@ const Category = () => {
                             <button onClick={() => onDelete()} className='btn btn-secondary btn-danger'>Delete</button>
                         </>
                     }
-                    <button onClick={() => navigateTo('/categories')} className='btn btn-secondary'>Cancel</button>
+                    <button onClick={() => navigateTo('/events')} className='btn btn-secondary'>Cancel</button>
                 </div>
             </div>
 
@@ -109,4 +109,4 @@ const Category = () => {
     )
 }
 
-export default Category
+export default Event
