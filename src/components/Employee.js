@@ -26,15 +26,25 @@ const Employee = () => {
     });
 
     const getDepartmentList = async () => {
-        const res = await fetch(`http://localhost:8080/department`);
-        const data = await res.json();
-        setDepartmentList(data);
+        var res = await fetch(`http://localhost:8080/department`);
+        var data = await res.json();
+
+        if (res.ok) {
+            return data;
+        } else {
+            setShowError(true);
+        }
     }
 
     const getEmployee = async () => {
-        const res = await fetch(`http://localhost:8080/employee/${employee.id}`);
-        const data = await res.json();
-        setEmployee(data);
+        var res = await fetch(`http://localhost:8080/employee/${employee.id}`);
+        var data = await res.json();
+
+        if (res.ok) {
+            return data;
+        } else {
+            setShowError(true);
+        }
     };
 
     const postEmployee = async () => {
@@ -52,21 +62,33 @@ const Employee = () => {
     };
 
     const deleteEmployee = async () => {
-        await fetch('http://localhost:8080/employee', {
+        var res = await fetch('http://localhost:8080/employee', {
             method: 'DELETE',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(employee),
         });
 
-        navigateTo('/employees/');
+        if (res.ok) {
+            navigateTo('/employees');
+        } else {
+            setShowError(true);
+        }
     }
 
-    const onSave = () => {
+    const onClickSave = () => {
         postEmployee();
     }
 
-    const onDelete = () => {
+    const onClickDelete = () => {
         deleteEmployee();
+    }
+
+    const onClickCancel = () => {
+        navigateTo('/employees');
+    }
+
+    const onClickCloseError = () => {
+        setShowError(false);
     }
 
     const onChangeFirstName = (_event) => {
@@ -80,17 +102,28 @@ const Employee = () => {
     const onChangeDepartment = (_event) => {
         var selectedDepartmentName = _event.target.value;
         var selectedDepartment = departmentList.filter((element) => {
-            return element.name == selectedDepartmentName;
+            return element.name === selectedDepartmentName;
         })[0];
 
         setEmployee({ ...employee, department: selectedDepartment });
     }
 
     useEffect(() => {
-        getDepartmentList();
-        if (!isAdding) {
-            getEmployee();
-        }
+        const initializeObjects = async () => {
+            var departmentList = await getDepartmentList();
+            setDepartmentList(departmentList);
+
+            if (isAdding) {
+                setEmployee({ ...employee, department: departmentList[0] });
+            } else {
+                setEmployee(await getEmployee());
+            }
+        };
+
+        initializeObjects();
+
+        // Disable useEffect missing dependency warning:
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -126,9 +159,9 @@ const Employee = () => {
             <div className='mb-3 row'>
                 <div className='col-sm-2' />
                 <div className='btn-group col-sm-10' role='group'>
-                    <button onClick={() => onSave()} className='btn btn-secondary btn-success'>{isAdding ? 'Add' : 'Save'}</button>
-                    {!isAdding && <button onClick={() => onDelete()} className='btn btn-secondary btn-danger'>Delete</button>}
-                    <button onClick={() => navigateTo('/employees')} className='btn btn-secondary'>Cancel</button>
+                    <button onClick={() => onClickSave()} className='btn btn-secondary btn-success'>{isAdding ? 'Add' : 'Save'}</button>
+                    {!isAdding && <button onClick={() => onClickDelete()} className='btn btn-secondary btn-danger'>Delete</button>}
+                    <button onClick={() => onClickCancel()} className='btn btn-secondary'>Cancel</button>
                 </div>
             </div>
 
@@ -136,7 +169,7 @@ const Employee = () => {
                 <div className="alert alert-danger" role="alert">
                     <p>Something went wrong.</p>
                     <div style={{ float: 'right' }}>
-                        <FaTimes className='close' onClick={() => { setShowError(false) }} />
+                        <FaTimes className='close' onClick={() => onClickCloseError()} />
                     </div>
                 </div>
             }
