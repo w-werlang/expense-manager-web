@@ -134,20 +134,23 @@ const Employee = () => {
                     <input type='text' readOnly className='form-control-plaintext' id='input-id' value={isAdding ? '' : employee.id} />
                 </div>
             </div>
+
             <div className='mb-3 row'>
-                <label htmlFor='input-name' className='col-sm-2 col-form-label'>First Name</label>
+                <label htmlFor='input-firstName' className='col-sm-2 col-form-label'>First Name</label>
                 <div className='col-sm-10'>
-                    <input type='text' className='form-control' id='input-name' value={employee.firstName} onChange={(_event) => onChangeFirstName(_event)} />
+                    <input type='text' className='form-control' id='input-firstName' value={employee.firstName} onChange={(_event) => onChangeFirstName(_event)} />
                 </div>
             </div>
+
             <div className='mb-3 row'>
-                <label htmlFor='input-desc' className='col-sm-2 col-form-label'>Last Name</label>
+                <label htmlFor='input-lastName' className='col-sm-2 col-form-label'>Last Name</label>
                 <div className='col-sm-10'>
-                    <input type='text' className='form-control' id='input-desc' value={employee.lastName} onChange={(_event) => onChangeLastName(_event)} />
+                    <input type='text' className='form-control' id='input-lastName' value={employee.lastName} onChange={(_event) => onChangeLastName(_event)} />
                 </div>
             </div>
+
             <div className='mb-3 row'>
-                <label htmlFor='input-desc' className='col-sm-2 col-form-label'>Department</label>
+                <label htmlFor='input-department' className='col-sm-2 col-form-label'>Department</label>
                 <div className='col-sm-10'>
                     <select value={employee.department.name} className="form-select" onChange={(_event) => onChangeDepartment(_event)} >
                         {departmentList.map((department) => (
@@ -156,6 +159,7 @@ const Employee = () => {
                     </select>
                 </div>
             </div>
+
             <div className='mb-3 row'>
                 <div className='col-sm-2' />
                 <div className='btn-group col-sm-10' role='group'>

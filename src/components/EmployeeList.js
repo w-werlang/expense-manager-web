@@ -1,28 +1,52 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiFillEdit } from 'react-icons/ai';
+import { FaTimes } from 'react-icons/fa';
 
 const EmployeeList = () => {
+
     const navigate = useNavigate();
     const navigateTo = (path) => {
         navigate(path);
     }
 
-    const [employees, setCategories] = useState([]);
+    const [showError, setShowError] = useState(false);
+    const [employees, setEmployees] = useState([]);
 
-    const getCategories = async () => {
-        const res = await fetch(`http://localhost:8080/employee`);
-        const data = await res.json();
-        setCategories(data);
+    const getEmployees = async () => {
+        var res = await fetch('http://localhost:8080/employee');
+        var data = await res.json();
+
+        if (res.ok) {
+            return data;
+        } else {
+            setShowError(true);
+        }
     };
 
-    useEffect(() => {
-        getCategories();
-    }, []);
-
-    const openEmployee = (id) => {
+    const onClickOpenEmployee = (id) => {
         navigateTo('/employee/' + id);
     }
+
+    const onClickAddEmployee = () => {
+        navigateTo('/employee')
+    }
+
+    const onClickCloseError = () => {
+        setShowError(false);
+    }
+
+    useEffect(() => {
+        const initializeObjects = async () => {
+            setEmployees(await getEmployees());
+        }
+
+        initializeObjects();
+
+        // Disable useEffect missing dependency warning:
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     return (
         <>
@@ -38,6 +62,7 @@ const EmployeeList = () => {
                         <th scope='col'></th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {employees.map((employee) => (
                         <tr key={employee.id} >
@@ -46,14 +71,24 @@ const EmployeeList = () => {
                             <td>{employee.lastName}</td>
                             <td>
                                 <button className='btn'>
-                                    <AiFillEdit onClick={() => openEmployee(employee.id)} />
+                                    <AiFillEdit onClick={() => onClickOpenEmployee(employee.id)} />
                                 </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <button onClick={() => navigateTo('/employee')} className='btn btn-primary' >Add Employee</button>
+
+            <button onClick={() => onClickAddEmployee()} className='btn btn-primary'>Add Employee</button>
+
+            {showError &&
+                <div className="alert alert-danger" role="alert">
+                    <p>Something went wrong.</p>
+                    <div style={{ float: 'right' }}>
+                        <FaTimes className='close' onClick={() => onClickCloseError()} />
+                    </div>
+                </div>
+            }
         </>
     )
 }

@@ -1,28 +1,52 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiFillEdit } from 'react-icons/ai';
+import { FaTimes } from 'react-icons/fa';
 
 const CategoryList = () => {
+
     const navigate = useNavigate();
     const navigateTo = (path) => {
         navigate(path);
     }
 
+    const [showError, setShowError] = useState(false);
     const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {
-        const res = await fetch(`http://localhost:8080/category`);
-        const data = await res.json();
-        setCategories(data);
+        var res = await fetch('http://localhost:8080/category');
+        var data = await res.json();
+
+        if (res.ok) {
+            return data;
+        } else {
+            setShowError(true);
+        }
     };
 
-    useEffect(() => {
-        getCategories();
-    }, []);
-
-    const openCategory = (id) => {
+    const onClickOpenCategory = (id) => {
         navigateTo('/category/' + id);
     }
+
+    const onClickAddCategory = () => {
+        navigateTo('/category')
+    }
+
+    const onClickCloseError = () => {
+        setShowError(false);
+    }
+
+    useEffect(() => {
+        const initializeObjects = async () => {
+            setCategories(await getCategories());
+        }
+
+        initializeObjects();
+
+        // Disable useEffect missing dependency warning:
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     return (
         <>
@@ -38,6 +62,7 @@ const CategoryList = () => {
                         <th scope='col'></th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {categories.map((category) => (
                         <tr key={category.id} >
@@ -46,14 +71,24 @@ const CategoryList = () => {
                             <td>{category.description}</td>
                             <td>
                                 <button className='btn'>
-                                    <AiFillEdit onClick={() => openCategory(category.id)} />
+                                    <AiFillEdit onClick={() => onClickOpenCategory(category.id)} />
                                 </button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <button onClick={() => navigateTo('/category')} className='btn btn-primary' >Add Category</button>
+
+            <button onClick={() => onClickAddCategory()} className='btn btn-primary'>Add Category</button>
+
+            {showError &&
+                <div className="alert alert-danger" role="alert">
+                    <p>Something went wrong.</p>
+                    <div style={{ float: 'right' }}>
+                        <FaTimes className='close' onClick={() => onClickCloseError()} />
+                    </div>
+                </div>
+            }
         </>
     )
 }
