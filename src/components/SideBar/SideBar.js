@@ -13,6 +13,7 @@ const SideBar = () => {
                 <SideBarEntry text='Departments' path='departments' />
                 <SideBarEntry text='Events' path='events' />
                 <SideBarEntry text='Employee' path='employees' />
+                <SideBarEntry text='Currency' path='currencies' />
             </ul>
             <hr />
             <SideBarProfile />

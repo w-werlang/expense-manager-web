@@ -9,6 +9,8 @@ import Event from './components/Event';
 import EventList from './components/EventList';
 import Employee from './components/Employee';
 import EmployeeList from './components/EmployeeList';
+import Currency from './components/Currency';
+import CurrencyList from './components/CurrencyList';
 
 function App() {
   return (
@@ -30,6 +32,9 @@ function App() {
           <Route path='/employees' element={<EmployeeList />} />
           <Route path='/employee' element={<Employee />} />
           <Route path='/employee/:id' element={<Employee />} />
+          <Route path='/currencies' element={<CurrencyList />} />
+          <Route path='/currency' element={<Currency />} />
+          <Route path='/currency/:id' element={<Currency />} />
         </Routes>
       </div>
     </div >
