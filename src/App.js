@@ -1,16 +1,16 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import SideBar from './components/SideBar/SideBar';
-import CategoryList from './components/CategoryList';
-import Category from './components/Category';
-import DepartmentList from './components/DepartmentList';
-import Department from './components/Department';
-import Event from './components/Event';
-import EventList from './components/EventList';
-import Employee from './components/Employee';
-import EmployeeList from './components/EmployeeList';
-import Currency from './components/Currency';
-import CurrencyList from './components/CurrencyList';
+import CategoryList from './components/MasterData/CategoryList';
+import Category from './components/MasterData/Category';
+import DepartmentList from './components/MasterData/DepartmentList';
+import Department from './components/MasterData/Department';
+import Event from './components/MasterData/Event';
+import EventList from './components/MasterData/EventList';
+import Employee from './components/MasterData/Employee';
+import EmployeeList from './components/MasterData/EmployeeList';
+import Currency from './components/MasterData/Currency';
+import CurrencyList from './components/MasterData/CurrencyList';
 
 function App() {
   return (
