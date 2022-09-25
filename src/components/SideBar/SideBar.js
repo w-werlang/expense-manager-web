@@ -10,10 +10,11 @@ const SideBar = () => {
             <hr />
             <ul className='nav nav-pills flex-column mb-auto'>
                 <SideBarEntry text='Categories' path='categories' />
-                <SideBarEntry text='Departments' path='departments' />
-                <SideBarEntry text='Events' path='events' />
-                <SideBarEntry text='Employee' path='employees' />
                 <SideBarEntry text='Currency' path='currencies' />
+                <SideBarEntry text='Departments' path='departments' />
+                <SideBarEntry text='Employee' path='employees' />
+                <SideBarEntry text='Events' path='events' />
+
             </ul>
             <hr />
             <SideBarProfile />
